@@ -66,6 +66,7 @@ export default async function CollectionPage({ params }: Props) {
               productType={product.product_type}
               imageUrl={product.images[0]?.url}
               imageAlt={product.images[0]?.alt_text}
+              hoverImageUrl={product.images[1]?.url}
             />
           ))}
         </div>
