@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vengoh Equestrian - Website Clone + AI Integration
+
+A demo project cloning [vengoh.com](https://vengoh.com) (premium equestrian fashion brand, Luxembourg) into a modern Next.js + Supabase stack, with architecture prepared for AI agent integration.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS 4
+- **Database**: Supabase (PostgreSQL + Row Level Security)
+- **AI** (planned): Claude API for chatbot + product recommendations
+- **Deployment**: Vercel-ready
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- npm
+- A [Supabase](https://supabase.com) project (free tier works)
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment
+
+Copy `.env.local.example` or create `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### 3. Set up database
+
+Run the migration SQL in your Supabase SQL editor:
+
+```
+supabase/migrations/001_initial_schema.sql
+```
+
+This creates 8 tables: `collections`, `products`, `product_variants`, `product_images`, `reviews`, `chat_conversations`, `chat_messages`, `shipping_policies` — all with RLS policies.
+
+### 4. Seed the database
+
+```bash
+npm run seed
+```
+
+### 5. Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── layout.tsx                 # Root layout (Baskervville + Inter fonts, Navbar, Footer, ChatWidget)
+│   ├── page.tsx                   # Homepage (Hero, FeaturedCollections, ShopTheLook, Reviews)
+│   ├── globals.css                # Tailwind config + Vengoh theme colors
+│   ├── collections/
+│   │   ├── page.tsx               # All collections grid
+│   │   └── [handle]/page.tsx      # Single collection with product grid
+│   ├── products/
+│   │   └── [handle]/page.tsx      # Product detail (gallery, variants, description)
+│   ├── contact/page.tsx           # Contact form + company info
+│   ├── b2b/page.tsx               # Wholesale inquiry form
+│   └── api/
+│       ├── chat/route.ts          # AI chatbot endpoint (placeholder)
+│       └── recommendations/route.ts # AI recommendations endpoint (placeholder)
+├── components/
+│   ├── layout/                    # Navbar, Footer, MobileMenu
+│   ├── home/                      # Hero, FeaturedCollections, ShopTheLook, Reviews
+│   ├── products/                  # ProductCard, ProductGallery, VariantSelector
+│   └── ai/                        # ChatWidget
+├── lib/
+│   ├── supabase.ts                # Supabase client
+│   └── types.ts                   # Database TypeScript types
+├── data/
+│   └── seed.ts                    # All product/collection/review seed data
+scripts/
+└── seed.ts                        # Database seeding script
+supabase/
+└── migrations/
+    └── 001_initial_schema.sql     # Full database schema
+```
 
-## Learn More
+## Design System
 
-To learn more about Next.js, take a look at the following resources:
+| Token | Value | Usage |
+|-------|-------|-------|
+| `vengoh-primary` | `#F6E2ED` | Dusty pink backgrounds |
+| `vengoh-accent` | `#8D2D5B` | Burgundy CTAs, links, accents |
+| `vengoh-sage` | `#8B9E7E` | Sage green accents |
+| `vengoh-navy` | `#1B2A4A` | Dark text/backgrounds |
+| Font (serif) | Baskervville | Headings, brand text |
+| Font (sans) | Inter | Body text |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Seed Data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **52 products** across base layers, breeches, leggings, vests, belts, gift cards, and services
+- **31 collections** (product lines, categories, colors, meta)
+- **10 customer reviews**
+- **4 shipping regions** (Luxembourg, EU, Other Europe, Rest of World)
+- **Business info**: Unbelievable Products S.a r.l., 74 Grand-Rue, L-1660 Luxembourg
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm run start` | Serve production build |
+| `npm run lint` | Run ESLint |
+| `npm run seed` | Populate Supabase with product data |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## AI Integration (Planned)
+
+The architecture is prepared for:
+
+1. **Customer Support Chatbot** — `ChatWidget` component + `/api/chat` route, backed by `chat_conversations` and `chat_messages` tables
+2. **Product Recommendations** — `/api/recommendations` route for semantic similarity search
+3. **Knowledge Base** — shipping policies, business info, and product data available for AI context
+
+## License
+
+Private — demo project for Vengoh Equestrian.
